@@ -1,73 +1,13 @@
 <!DOCTYPE html>
 <html lang="ar">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>بطاقات التهنئة</title>
-    <link rel="stylesheet" href="style.css">
-    <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-
-</head>
-<body>
-    <div class="container">
-        <h1>اختر بطاقة واكتب اسمك</h1>
-
-        <div class="card-container">
-            <img src="test.JPG" class="card" onclick="selectCard('test.JPG')">
-            <img src="cards/card2.jpg" class="card" onclick="selectCard('cards/card2.jpg')">
-        </div>
-
-        <input type="text" id="username" placeholder="اكتب اسمك هنا" class="input-field">
-        <button onclick="generateCard()" class="generate-button">إنشاء البطاقة</button>
-
-        <!-- معاينة البطاقة -->
-        <div id="preview" class="preview-container" style="display:none;">
-            <div class="card-preview">
-                <img id="previewImage" src="" alt="البطاقة" class="preview-image">
-                <p id="previewText" class="preview-text"></p>
-            </div>
-            <button onclick="downloadCard()" class="download-button">تحميل البطاقة</button>
-        </div>
-    </div>
-
-    <script>
-        let selectedCard = "";
-
-        function selectCard(imagePath) {
-            selectedCard = imagePath;
-        }
-
-        function generateCard() {
-            if (!selectedCard) {
-                alert("يرجى اختيار بطاقة أولاً!");
-                return;
-            }
-
-            let username = document.getElementById("username").value.trim();
-            if (username === "") {
-                alert("يرجى إدخال اسمك!");
-                return;
-            }
-
-            // عرض البطاقة مع الاسم داخل الصورة
-            document.getElementById("preview").style.display = "block";
-            document.getElementById("previewImage").src = selectedCard;
-            document.getElementById("previewText").textContent = username;
-        }
-
-        function downloadCard() {
-            let username = document.getElementById("username").value.trim();
-            if (!username || !selectedCard) return;
-
-            // إنشاء رابط لتحميل الصورة
-            window.location.href = `generate.php?image=${selectedCard}&text=${encodeURIComponent(username)}`;
-        }
-    </script>
-</body>
-</html>
-
-
-<style>/* تنسيق العام للصفحة */
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>بطاقات التهنئة</title>
+  <link rel="stylesheet" href="style.css">
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <style>
+ * تنسيق العام للصفحة */
 body {
     font-family: 'Arial', sans-serif;
     background: linear-gradient(to right, #ff7e5f, #feb47b);
@@ -191,4 +131,66 @@ h1 {
     background-color: #feb47b;
 }
 
-</style>
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>اختر بطاقة واكتب اسمك</h1>
+
+    <div class="card-container">
+      <img src="test.JPG" class="card" onclick="selectCard('test.JPG')">
+      <img src="cards/card2.jpg" class="card" onclick="selectCard('cards/card2.jpg')">
+    </div>
+
+    <input type="text" id="username" placeholder="اكتب اسمك هنا" class="input-field">
+    <button onclick="generateCard()" class="generate-button">إنشاء البطاقة</button>
+
+    <!-- معاينة البطاقة -->
+    <div id="preview" class="preview-container" style="display:none;">
+      <div class="card-preview" id="cardArea">
+        <img id="previewImage" src="" alt="البطاقة" class="preview-image">
+        <p id="previewText" class="preview-text"></p>
+      </div>
+      <button onclick="downloadCard()" class="download-button">تحميل البطاقة</button>
+    </div>
+  </div>
+
+  <script>
+    let selectedCard = "";
+
+    function selectCard(imagePath) {
+      selectedCard = imagePath;
+    }
+
+    function generateCard() {
+      if (!selectedCard) {
+        alert("يرجى اختيار بطاقة أولاً!");
+        return;
+      }
+
+      let username = document.getElementById("username").value.trim();
+      if (username === "") {
+        alert("يرجى إدخال اسمك!");
+        return;
+      }
+
+      document.getElementById("preview").style.display = "block";
+      document.getElementById("previewImage").src = selectedCard;
+      document.getElementById("previewText").textContent = username;
+    }
+
+    function downloadCard() {
+      const cardElement = document.getElementById("cardArea");
+
+      html2canvas(cardElement).then(canvas => {
+        const image = canvas.toDataURL("image/png");
+        const link = document.createElement("a");
+        link.href = image;
+        link.download = "بطاقتك.png";
+        link.click();
+      });
+    }
+  </script>
+</body>
+</html>
